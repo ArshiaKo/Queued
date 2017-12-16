@@ -6,28 +6,42 @@ using System.Threading.Tasks;
 
 namespace Queued_Linked_List
 {
-    class QueueLinkedList<T>
+    class QueueLinkedList<T> where T : IComparable<T>
     {
-        bool isEmpty = true;
+        
+        int count { get; set; }
         public QNode<T> Head = null;
         public QueueLinkedList()
         {
             Head = null;
         }
+        bool isEmpty()
+        {
+            if (count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         #region ENQ
         public void EnQ(T Value)
         {
             QNode<T> NewNode = new QNode<T>(Value);
             if (Head == null)
             {
-                Head = new QNode<T>(Value);
+                Head = new QNode<T>(Value); count++;
             }
             else if (Head.NextNode == null)
             {
-                Head.NextNode = new QNode<T>(Value);
+                Head.NextNode = new QNode<T>(Value); count++;
             }
             else
             {
+                count++;
                 QNode<T> traversalNode = Head;
                 while (traversalNode.NextNode != null)
                 {
@@ -40,10 +54,19 @@ namespace Queued_Linked_List
         #region DEQ
         public T DeQ()
         {
-            QNode<T> temp = Head;
-            Head.Previous = Head;
-            return;
+            if (count == 0)
+            {
+                throw new InvalidOperationException("Cannot Dequeue an Empty Queue");
+            }
+            else 
+            {
+                QNode<T> temp = Head;
+                Head = Head.NextNode;
+                count--;
+                return temp.Data;
+            }
         }
         #endregion
+            
     }
 }
